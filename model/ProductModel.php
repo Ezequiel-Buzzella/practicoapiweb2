@@ -13,6 +13,25 @@ class ProductModel extends BaseModel
     return $products;
   }
 
+  function showAllOrdered($column, $direction = 'ASC')
+{
+
+  $allowedColumns = ['id_producto', 'nombre_producto', 'precio_producto', 'fk_id_categoria'];
+  if (!in_array($column, $allowedColumns)) {
+    $column = 'id_producto';
+  }
+
+  $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+
+
+  $query = $this->db->prepare("SELECT * FROM producto ORDER BY $column $direction");
+  $query->execute();
+  $products = $query->fetchAll(PDO::FETCH_OBJ);
+
+  return $products;
+}
+
+
   function insertProduct($nombre_producto, $descripcion_producto, $precio_producto, $fk_id_categoria)
   {
     $query = $this->db->prepare('INSERT INTO producto(nombre_producto,descripcion_producto,precio_producto,fk_id_categoria)
