@@ -85,14 +85,3 @@ Body(JSON):
     "fk_id_categoria": 1
 }
 
-Estructura de la base de datos (DER)
-
-Tablas principales:
-
-producto
-Campo	Tipo	Descripción
-id_producto	INT (PK)	Identificador del producto
-nombre_producto	VARCHAR	Nombre del producto
-descripcion_producto	TEXT	Descripción del producto
-precio_producto	DOUBLE	Precio del producto
-fk_id_categoria	INT (FK)	Relación con la tabla categoria
