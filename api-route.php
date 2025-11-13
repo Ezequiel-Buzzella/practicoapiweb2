@@ -1,7 +1,12 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+
+
 require_once './libs/router/router.php';
-require_once './controller/category-api-controller.php';
-require_once './controller/product-api-controller.php';
+require_once './controller/ProductApiController.php';
 
 
 $router = new Router();

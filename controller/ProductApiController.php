@@ -2,38 +2,29 @@
 
 require_once './model/ProductModel.php';
 
-class ProductApiController {
+class ProductApiController
+{
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->model = new ProductModel();
     }
 
+public function getAll($request, $response)
+{
+    $sort = $_GET['sort'] ?? null;
+    $order = $_GET['order'] ?? 'ASC';
 
-    public function getAll($request, $response) {
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
-        $order = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
+    $products = $this->model->showAll($sort, $order);
 
-        if ($order !== 'asc' && $order !== 'desc') {
-            $order = 'asc';
-        }
-
-        if (empty($sort)) {
-            $products = $this->model->showAll();
-        } else {
-            $allowed = ['id_producto', 'nombre_producto', 'precio_producto', 'fk_id_categoria'];
-            if (!in_array($sort, $allowed)) {
-                return $response->json(['error' => 'Campo de ordenamiento inválido'], 400);
-            }
-
-            $products = $this->model->showAllOrdered($sort, $order);
-        }
-
-        return $response->json($products, 200);
-    }
+    return $response->json($products, 200);
+}
 
 
-    public function getById($request, $response) {
+
+    public function getById($request, $response)
+    {
         $id = $request->params->id ?? null;
 
         if (!$id) {
@@ -49,13 +40,16 @@ class ProductApiController {
     }
 
 
-    public function create($request, $response) {
+    public function create($request, $response)
+    {
         $data = $request->body;
 
-        if (!$data ||
+        if (
+            !$data ||
             !isset($data->nombre_producto) ||
             !isset($data->precio_producto) ||
-            !isset($data->fk_id_categoria)) {
+            !isset($data->fk_id_categoria)
+        ) {
             return $response->json(['error' => 'Datos incompletos'], 400);
         }
 
@@ -70,9 +64,10 @@ class ProductApiController {
     }
 
 
-    public function update($request, $response) {
+    public function update($request, $response)
+    {
         $id = $request->params->id ?? null;
-        $data = $request->body;
+        $data = json_decode(file_get_contents('php://input'));
 
         if (!$id || !$data) {
             return $response->json(['error' => 'Datos incompletos'], 400);
@@ -94,7 +89,8 @@ class ProductApiController {
         return $response->json(['message' => 'Producto actualizado correctamente'], 200);
     }
 
-    public function delete($request, $response) {
+    public function delete($request, $response)
+    {
         $id = $request->params->id ?? null;
 
         if (!$id) {
@@ -111,7 +107,8 @@ class ProductApiController {
     }
 
 
-    public function notFound($request, $response) {
+    public function notFound($request, $response)
+    {
         return $response->json(['error' => 'Ruta no encontrada'], 404);
     }
 }
